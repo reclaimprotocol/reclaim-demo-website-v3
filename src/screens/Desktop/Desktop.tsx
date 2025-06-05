@@ -27,6 +27,34 @@ interface LogoScrollerProps {
   companyLogos: Logo[];
 }
 
+const getProviderDetails = async (providerId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.reclaimprotocol.org/api/providers/${providerId}`,
+      {
+        headers: {
+          accept: "application/json, text/plain, */*",
+          "accept-language": "en-GB,en;q=0.6",
+        },
+        body: null,
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const name = data.providers.name;
+    const logoUrl = data.providers.logoUrl;
+    return { name, logoUrl, providerId };
+  } catch (error) {
+    console.error("Error fetching provider details:", error);
+    throw error;
+  }
+};
+
 const LogoScroller: React.FC<LogoScrollerProps> = ({ companyLogos }) => {
   return (
     <div className="w-full overflow-hidden py-1 fixed bottom-0">
@@ -70,11 +98,17 @@ export const Desktop = (): JSX.Element => {
   const [selectedSource, setSelectedSource] = useState<string | undefined>(
     undefined
   );
-
+  const [customProviderId, setCustomProviderId] = useState("");
   const [requestUrl, setRequestUrl] = useState("");
   const [proofs, setProofs] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [providerName, setProviderName] = useState<string>("");
+  const [providerIcon, setProviderIcon] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loadingState, setLoadingState] = useState<{
+    type: "none" | "provider" | "custom";
+    step: "fetching" | "generating" | "none";
+  }>({ type: "none", step: "none" });
 
   // Check if device is mobile on component mount
   useEffect(() => {
@@ -234,7 +268,7 @@ export const Desktop = (): JSX.Element => {
       name: "LinkedIn verifications",
       icon: <LinkedinIcon className="w-[18px] h-[18px]" />,
       providerId: "2c636fe2-4859-4e1f-8411-9e9d270b4675",
-    }
+    },
   ];
 
   // Data for company logos to map over
@@ -291,8 +325,12 @@ export const Desktop = (): JSX.Element => {
   // Handle source selection
   const handleSourceSelect = (value: string) => {
     setSelectedSource(value);
+    setCustomProviderId("");
+    setProviderName("");
+    setProviderIcon("");
+    setErrorMessage("");
     setRequestUrl("");
-    setIsLoading(true);
+    setLoadingState({ type: "provider", step: "generating" });
     setProofs([]);
   };
 
@@ -314,7 +352,7 @@ export const Desktop = (): JSX.Element => {
   const getVerificationReq = async () => {
     if (!selectedDataSource) return;
 
-    setIsLoading(true);
+    setLoadingState({ type: "provider", step: "generating" });
     try {
       // Your credentials from the Reclaim Developer Portal
       // Replace these with your actual credentials
@@ -351,6 +389,7 @@ export const Desktop = (): JSX.Element => {
       const requestUrl = await reclaimProofRequest.getRequestUrl();
       console.log("Request URL:", requestUrl);
       setRequestUrl(requestUrl);
+      setLoadingState({ type: "none", step: "none" });
 
       // Start listening for proof submissions
       await reclaimProofRequest.startSession({
@@ -377,7 +416,6 @@ export const Desktop = (): JSX.Element => {
               }
             }
           }
-          setIsLoading(false);
           // Add your success logic here, such as:
           // - Updating UI to show verification success
           // - Storing verification status
@@ -386,7 +424,12 @@ export const Desktop = (): JSX.Element => {
         // Called if there's an error during verification
         onError: (error) => {
           console.error("Verification failed", error);
-          setIsLoading(false);
+          setErrorMessage(
+            error instanceof Error
+              ? error.message.split(": ")[1]
+              : "An unknown error occurred"
+          );
+          setLoadingState({ type: "none", step: "none" });
 
           // Add your error handling logic here, such as:
           // - Showing error message to user
@@ -396,7 +439,12 @@ export const Desktop = (): JSX.Element => {
       });
     } catch (error) {
       console.error("Error generating verification request:", error);
-      setIsLoading(false);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message.split(": ")[1]
+          : "An unknown error occurred"
+      );
+      setLoadingState({ type: "none", step: "none" });
     }
   };
 
@@ -412,10 +460,103 @@ export const Desktop = (): JSX.Element => {
     }
   };
 
+  // Add new function for handling custom provider verification
+  const handleCustomProviderSubmit = async () => {
+    if (!customProviderId) return;
+    setRequestUrl("");
+    setProviderName("");
+    setProviderIcon("");
+    setErrorMessage("");
+    setProofs([]);
+
+    setLoadingState({ type: "custom", step: "fetching" });
+    setErrorMessage(""); // Clear any previous errors
+    try {
+      const details = await getProviderDetails(customProviderId);
+      setProviderName(details.name);
+      setProviderIcon(details.logoUrl);
+      console.log(details);
+
+      setLoadingState({ type: "custom", step: "generating" });
+
+      // Initialize verification with custom provider
+      const APP_ID = import.meta.env.VITE_RECLAIM_APP_ID || "";
+      const APP_SECRET = import.meta.env.VITE_RECLAIM_APP_SECRET || "";
+
+      const isMobile =
+        /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+          navigator.userAgent.toLowerCase()
+        ) ||
+        (typeof window.orientation !== "undefined" ? window.orientation : -1) >
+          -1;
+
+      const isIOS =
+        /mac|iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase()) ||
+        false;
+      const deviceType = isMobile ? (isIOS ? "ios" : "android") : "desktop";
+
+      const reclaimProofRequest = await ReclaimProofRequest.init(
+        APP_ID,
+        APP_SECRET,
+        customProviderId,
+        {
+          device: deviceType,
+          useAppClip: deviceType !== "desktop",
+        }
+      );
+
+      const requestUrl = await reclaimProofRequest.getRequestUrl();
+      console.log("Request URL:", requestUrl);
+      setLoadingState({ type: "none", step: "none" });
+      setRequestUrl(requestUrl);
+
+      await reclaimProofRequest.startSession({
+        onSuccess: (proofs) => {
+          if (proofs) {
+            if (typeof proofs === "string") {
+              console.log("SDK Message:", proofs);
+              setProofs([proofs]);
+            } else if (typeof proofs !== "string") {
+              if (Array.isArray(proofs)) {
+                console.log(
+                  "Verification success",
+                  JSON.stringify(proofs.map((p) => p.claimData.context))
+                );
+                setProofs(proofs);
+              } else {
+                console.log("Verification success", proofs?.claimData.context);
+                setProofs([proofs]);
+              }
+            }
+          }
+          setLoadingState({ type: "none", step: "none" });
+        },
+        onError: (error) => {
+          console.error("Verification failed", error);
+          setErrorMessage("Verification failed. Please try again.");
+          setLoadingState({ type: "none", step: "none" });
+        },
+      });
+    } catch (error) {
+      console.error("Error with custom provider:", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message.includes("HTTP error! status: 404")
+            ? "Provider not found. Please recheck the provider ID."
+            : error.message.split(": ")[1]
+          : "An unknown error occurred"
+      );
+      setLoadingState({ type: "none", step: "none" });
+      // Clear provider details on error
+      setProviderName("");
+      setProviderIcon("");
+    }
+  };
+
   return (
     <main className="bg-white flex flex-row justify-center w-full min-h-screen overflow-y-auto">
       <div className="bg-white [background:radial-gradient(50%_50%_at_-108%_112%,rgba(0,0,238,1)_0%,rgba(255,255,255,1)_100%)] w-full relative pb-20">
-        <div className="w-full max-w-[1347px] mx-auto relative pt-10 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[1347px] mx-auto relative pt-6 px-4 sm:px-6 lg:px-8">
           <div className="relative">
             {/* Blue glow effect */}
             <div className="absolute w-[250px] sm:w-[300px] md:w-[395px] h-[250px] sm:h-[300px] md:h-[395px] top-0 right-0 bg-[#0000ee] rounded-[197.5px] blur-[250px]" />
@@ -444,7 +585,7 @@ export const Desktop = (): JSX.Element => {
               </header>
 
               {/* Data source selector */}
-              <div className="flex flex-col items-center gap-4 w-full max-w-[90%] sm:max-w-[400px] md:max-w-[524px]">
+              <div className="flex flex-col items-center gap-2 w-full max-w-[90%] sm:max-w-[400px] md:max-w-[524px]">
                 <Select
                   onValueChange={handleSourceSelect}
                   value={selectedSource}
@@ -500,13 +641,69 @@ export const Desktop = (): JSX.Element => {
                     </div>
                   </SelectContent>
                 </Select>
+                <p>or</p>
 
-                {isLoading && selectedDataSource && !requestUrl && (
+                {/* Custom Provider Input Section */}
+                <div className="flex items-center gap-2 w-full">
+                  <input
+                    type="text"
+                    placeholder="Enter custom provider ID"
+                    className="flex-1 h-[50px] px-4 rounded-[10px] border border-[#0000ee20] font-['Karla',Helvetica] font-normal text-black text-base"
+                    value={customProviderId}
+                    onChange={(e) => {
+                      setCustomProviderId(e.target.value);
+                      setErrorMessage(""); // Clear error when input changes
+                    }}
+                  />
+                  <Button
+                    onClick={handleCustomProviderSubmit}
+                    className="h-[50px] px-6 bg-[#0000ee] text-white rounded-[10px]"
+                    disabled={loadingState.type !== "none"}
+                  >
+                    {loadingState.type === "custom" ? "Loading..." : "Submit"}
+                  </Button>
+                </div>
+
+                {/* Provider Details Display */}
+                {providerName && providerIcon && (
+                  <div className="flex items-center gap-2 mt-2 p-2 bg-gray-50 rounded-md">
+                    <img
+                      src={providerIcon}
+                      alt={providerName}
+                      className="w-6 h-6 rounded-full"
+                    />
+                    <span className="font-medium text-sm">{providerName}</span>
+                  </div>
+                )}
+
+                {/* Error Message Display */}
+                {errorMessage && (
+                  <div className="text-red-500 text-sm mt-2 text-center">
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* Loading states */}
+                {loadingState.type === "provider" &&
+                  loadingState.step === "generating" &&
+                  !requestUrl && (
+                    <div className="text-center py-4 w-full">
+                      <p className="text-[#0000ee] font-['Poppins',Helvetica]">
+                        {isMobile
+                          ? "Generating verification link..."
+                          : "Generating QR code..."}
+                      </p>
+                    </div>
+                  )}
+
+                {loadingState.type === "custom" && (
                   <div className="text-center py-4 w-full">
                     <p className="text-[#0000ee] font-['Poppins',Helvetica]">
-                      {isMobile
-                        ? "Generating link..."
-                        : "Generating QR code..."}
+                      {loadingState.step === "generating"
+                        ? isMobile
+                          ? "Generating verification link..."
+                          : "Generating QR code..."
+                        : ""}
                     </p>
                   </div>
                 )}
