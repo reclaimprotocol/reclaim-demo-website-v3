@@ -269,6 +269,17 @@ export const Desktop = (): JSX.Element => {
       icon: <LinkedinIcon className="w-[18px] h-[18px]" />,
       providerId: "2c636fe2-4859-4e1f-8411-9e9d270b4675",
     },
+    {
+      name: "EPFO Employment History",
+      icon: (
+        <img
+          src="https://devtool-images.s3.ap-south-1.amazonaws.com…a.gov.in-67f7fb10-7db4-4452-a41d-81549a632d19.png"
+          alt="epfo"
+          className="w-[18px] h-[18px]"
+        />
+      ),
+      providerId: "c64918ac-9a21-4b49-9bb0-13ede03da3ca",
+    },
   ];
 
   // Data for company logos to map over
