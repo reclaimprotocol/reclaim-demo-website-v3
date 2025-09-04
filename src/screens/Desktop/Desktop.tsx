@@ -117,78 +117,12 @@ export const Desktop = (): JSX.Element => {
         navigator.userAgent.toLowerCase()
       ) ||
       (typeof window.orientation !== "undefined" ? window.orientation : -1) >
-        -1;
+      -1;
     setIsMobile(checkMobile);
   }, []);
 
   // Data for the data sources to map over
   const dataSources = [
-    {
-      name: "X user profile",
-      icon: <TwitterIcon className="w-[18px] h-[18px]" />,
-      providerId: "e6fe962d-8b4e-4ce5-abcc-3d21c88bd64a",
-    },
-    {
-      name: "Coinbase KYC",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          version="1.2"
-          baseProfile="tiny"
-          id="Layer_1"
-          x="0px"
-          y="0px"
-          viewBox="0 0 1024 1024"
-          overflow="visible"
-          xmlSpace="preserve"
-          className="w-[18px] h-[18px]"
-        >
-          <path
-            fill="#0052FF"
-            d="M512,0L512,0c282.8,0,512,229.2,512,512l0,0c0,282.8-229.2,512-512,512l0,0C229.2,1024,0,794.8,0,512l0,0  C0,229.2,229.2,0,512,0z"
-          />
-          <path
-            fill="#FFFFFF"
-            d="M512.1,692c-99.4,0-180-80.5-180-180s80.6-180,180-180c89.1,0,163.1,65,177.3,150h181.3  c-15.3-184.8-170-330-358.7-330c-198.8,0-360,161.2-360,360s161.2,360,360,360c188.7,0,343.4-145.2,358.7-330H689.3  C675,627,601.2,692,512.1,692z"
-          />
-        </svg>
-      ),
-      providerId: "285a345c-c6a6-4b9f-9e1e-23432082c0a8",
-    },
-    {
-      name: "Github username",
-      icon: <GithubIcon className="w-[18px] h-[18px]" />,
-      providerId: "6d3f6753-7ee6-49ee-a545-62f1b1822ae5",
-    },
-    {
-      name: "Gmail Account",
-      icon: (
-        <div className="w-[18px] h-[18px] bg-[url(/group-1.png)] bg-[100%_100%]" />
-      ),
-      providerId: "f9f383fd-32d9-4c54-942f-5e9fda349762",
-    },
-    {
-      name: "Youtube Creator Analytics",
-      icon: <YoutubeIcon className="w-[18px] h-[18px]" />,
-      providerId: "f826e0b5-bb4d-4a85-b64c-2cd5c148657e",
-    },
-    {
-      name: "Steam Counter Strike Inventory",
-      icon: (
-        <img
-          src="https://devtool-images.s3.ap-south-1.amazonaws.com/http-provider-brand-logos/steampowered.com-ba4366e5-2dae-4611-9819-6f12cd452583.png"
-          alt="Steam"
-          className="w-[18px] h-[18px]"
-        />
-      ),
-      providerId: "835cfd84-4096-4b3b-a547-4938686e9c5e",
-    },
-    {
-      name: "LinkedIn user profile",
-      icon: <LinkedinIcon className="w-[18px] h-[18px]" />,
-      providerId: "e3b24f7a-92d1-4b9c-bf4d-7a6f21c3d918",
-    },
     {
       name: "Amazon Last 2 order details",
       icon: (
@@ -196,90 +130,7 @@ export const Desktop = (): JSX.Element => {
       ),
       providerId: "bcaa6b6b-632f-43ec-8de5-c7cc9113aacd",
     },
-    {
-      name: "Swiggy Order analytics",
-      icon: (
-        <svg
-          className="w-[18px] h-[18px]"
-          xmlns="http://www.w3.org/2000/svg"
-          height="2500"
-          viewBox="-7.3 3.6 2520.1 3702.8"
-          width="1708"
-        >
-          <path
-            d="m1255.2 3706.3c-2.4-1.7-5-4-7.8-6.3-44.6-55.3-320.5-400.9-601.6-844.2-84.4-141.2-139.1-251.4-128.5-279.9 27.5-74.1 517.6-114.7 668.5-47.5 45.9 20.4 44.7 47.3 44.7 63.1 0 67.8-3.3 249.8-3.3 249.8 0 37.6 30.5 68.1 68.2 68 37.7 0 68.1-30.7 68-68.4l-.7-453.3h-.1c0-39.4-43-49.2-51-50.8-78.8-.5-238.7-.9-410.5-.9-379 0-463.8 15.6-528-26.6-139.5-91.2-367.6-706-372.9-1052-7.5-488 281.5-910.5 688.7-1119.8 170-85.6 362-133.9 565-133.9 644.4 0 1175.2 486.4 1245.8 1112.3 0 .5 0 1.2.1 1.7 13 151.3-820.9 183.4-985.8 139.4-25.3-6.7-31.7-32.7-31.7-43.8-.1-115-.9-438.8-.9-438.8-.1-37.7-30.7-68.1-68.4-68.1-37.6 0-68.1 30.7-68.1 68.4l1.5 596.4c1.2 37.6 32.7 47.7 41.4 49.5 93.8 0 313.1-.1 517.4-.1 276.1 0 392.1 32 469.3 90.7 51.3 39.1 71.1 114 53.8 211.4-154.9 866-1135.9 1939.1-1172.8 1983.8z"
-            fill="#fc8019"
-          />
-        </svg>
-      ),
-      providerId: "e7da584e-7353-4b88-a51d-3fc8abc332f0",
-    },
-    {
-      name: "Zomato Order analytics",
-      icon: (
-        <img src="/zomato.webp" alt="Zomato" className="w-[18px] h-[18px]" />
-      ),
-      providerId: "61fea293-73bc-495c-9354-c2f61294fcaf",
-    },
-    // {
-    //   name: "Swiggy Order history",
-    //   icon: (
-    //     <svg
-    //       className="w-[18px] h-[18px]"
-    //       xmlns="http://www.w3.org/2000/svg"
-    //       height="2500"
-    //       viewBox="-7.3 3.6 2520.1 3702.8"
-    //       width="1708"
-    //     >
-    //       <path
-    //         d="m1255.2 3706.3c-2.4-1.7-5-4-7.8-6.3-44.6-55.3-320.5-400.9-601.6-844.2-84.4-141.2-139.1-251.4-128.5-279.9 27.5-74.1 517.6-114.7 668.5-47.5 45.9 20.4 44.7 47.3 44.7 63.1 0 67.8-3.3 249.8-3.3 249.8 0 37.6 30.5 68.1 68.2 68 37.7 0 68.1-30.7 68-68.4l-.7-453.3h-.1c0-39.4-43-49.2-51-50.8-78.8-.5-238.7-.9-410.5-.9-379 0-463.8 15.6-528-26.6-139.5-91.2-367.6-706-372.9-1052-7.5-488 281.5-910.5 688.7-1119.8 170-85.6 362-133.9 565-133.9 644.4 0 1175.2 486.4 1245.8 1112.3 0 .5 0 1.2.1 1.7 13 151.3-820.9 183.4-985.8 139.4-25.3-6.7-31.7-32.7-31.7-43.8-.1-115-.9-438.8-.9-438.8-.1-37.7-30.7-68.1-68.4-68.1-37.6 0-68.1 30.7-68.1 68.4l1.5 596.4c1.2 37.6 32.7 47.7 41.4 49.5 93.8 0 313.1-.1 517.4-.1 276.1 0 392.1 32 469.3 90.7 51.3 39.1 71.1 114 53.8 211.4-154.9 866-1135.9 1939.1-1172.8 1983.8z"
-    //         fill="#fc8019"
-    //       />
-    //     </svg>
-    //   ),
-    //   providerId: "385b8e17-467d-4814-95b7-cbe58118c13e",
-    // },
-    // {
-    //   name: "Zomato Order history",
-    //   icon: (
-    //     <img src="/zomato.webp" alt="Zomato" className="w-[18px] h-[18px]" />
-    //   ),
-    //   providerId: "61fea293-73bc-495c-9354-c2f61294fc30",
-    // },
-    {
-      name: "Flipkart Order history",
-      icon: (
-        <img src="/image-5.png" alt="Flipkart" className="w-[18px] h-[18px]" />
-      ),
-      providerId: "29495787-4142-47be-a6fc-f3d4530c33da",
-    },
-    {
-      name: "Spotify user-artist overview",
-      icon: (
-        <img
-          src="https://devtool-images.s3.ap-south-1.amazonaws.com/http-provider-brand-logos/spotify.com-3d4ce35c-312a-4303-95ed-64387d6c00b3.png"
-          alt="Spotify"
-          className="w-[18px] h-[18px]"
-        />
-      ),
-      providerId: "f395c58c-9b19-4623-8887-c8599c7996cf",
-    },
-    {
-      name: "LinkedIn verifications",
-      icon: <LinkedinIcon className="w-[18px] h-[18px]" />,
-      providerId: "2c636fe2-4859-4e1f-8411-9e9d270b4675",
-    },
-    {
-      name: "EPFO Employment History",
-      icon: (
-        <img
-          src="https://devtool-images.s3.ap-south-1.amazonaws.com…a.gov.in-67f7fb10-7db4-4452-a41d-81549a632d19.png"
-          alt="epfo"
-          className="w-[18px] h-[18px]"
-        />
-      ),
-      providerId: "c64918ac-9a21-4b49-9bb0-13ede03da3ca",
-    },
+
   ];
 
   // Data for company logos to map over
@@ -348,9 +199,9 @@ export const Desktop = (): JSX.Element => {
   // Find the selected data source
   const selectedDataSource = selectedSource
     ? dataSources.find(
-        (source) =>
-          source.name.toLowerCase().replace(/\s+/g, "-") === selectedSource
-      )
+      (source) =>
+        source.name.toLowerCase().replace(/\s+/g, "-") === selectedSource
+    )
     : undefined;
 
   // Effect to automatically generate verification request when source changes
@@ -376,7 +227,7 @@ export const Desktop = (): JSX.Element => {
           navigator.userAgent.toLowerCase()
         ) ||
         (typeof window.orientation !== "undefined" ? window.orientation : -1) >
-          -1;
+        -1;
 
       // Check if device is iOS
       const isIOS =
@@ -499,7 +350,7 @@ export const Desktop = (): JSX.Element => {
           navigator.userAgent.toLowerCase()
         ) ||
         (typeof window.orientation !== "undefined" ? window.orientation : -1) >
-          -1;
+        -1;
 
       const isIOS =
         /mac|iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase()) ||
@@ -583,12 +434,12 @@ export const Desktop = (): JSX.Element => {
             {/* Main content */}
             <div className="flex flex-col items-center gap-6 sm:gap-8 md:gap-[30px] w-full max-w-[1043px] mx-auto">
               <header className="flex flex-col items-center justify-center relative self-stretch w-full flex-[0_0_auto]">
-                <h1 className="relative w-fit mt-[-1.00px] font-['Poppins',Helvetica] font-bold text-[#0000ee] text-3xl sm:text-4xl md:text-5xl lg:text-[64px] text-center tracking-[0] leading-[normal]">
-                  Reclaim Protocol Demo
+                <h1 className="relative w-fit mt-[-1.00px] font-['Poppins',Helvetica] font-bold text-[#0000ee] text-3xl sm:text-4xl md:text-5xl lg:text-[64px] text-center tracking-[0] leading-[normal] line-height-[2]">
+                  Hey Pierre <br />Welcome to Reclaim Protocol
                 </h1>
 
                 <p className="relative w-fit font-['Poppins',Helvetica] font-normal text-[#0000ee] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-[normal] mt-2 px-4">
-                  Proofs generated by Reclaim Protocol are secure and private.{" "}
+                  Verify your amazon data, Proofs generated by Reclaim Protocol are secure and private.{" "}
                   <a href="#" className="text-[#0000ee] underline">
                     Learn More
                   </a>
@@ -620,7 +471,7 @@ export const Desktop = (): JSX.Element => {
                   </SelectTrigger>
                   <SelectContent className="rounded-[10px]">
                     <div
-                      className="relative h-[220px] overflow-y-scroll pr-3 scrollbar"
+                      className="relative h-[100px] overflow-y-scroll pr-3 scrollbar"
                       style={{ scrollbarWidth: "auto", overflowY: "scroll" }}
                     >
                       <div className="py-2">
@@ -652,28 +503,6 @@ export const Desktop = (): JSX.Element => {
                     </div>
                   </SelectContent>
                 </Select>
-                <p>or</p>
-
-                {/* Custom Provider Input Section */}
-                <div className="flex items-center gap-2 w-full">
-                  <input
-                    type="text"
-                    placeholder="Enter custom provider ID"
-                    className="flex-1 h-[50px] px-4 rounded-[10px] border border-[#0000ee20] font-['Karla',Helvetica] font-normal text-black text-base"
-                    value={customProviderId}
-                    onChange={(e) => {
-                      setCustomProviderId(e.target.value);
-                      setErrorMessage(""); // Clear error when input changes
-                    }}
-                  />
-                  <Button
-                    onClick={handleCustomProviderSubmit}
-                    className="h-[50px] px-6 bg-[#0000ee] text-white rounded-[10px]"
-                    disabled={loadingState.type !== "none"}
-                  >
-                    {loadingState.type === "custom" ? "Loading..." : "Submit"}
-                  </Button>
-                </div>
 
                 {/* Provider Details Display */}
                 {providerName && providerIcon && (
