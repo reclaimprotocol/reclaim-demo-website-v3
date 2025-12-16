@@ -60,6 +60,8 @@ This demonstrates the integration of Reclaim Protocol's JS SDK for managing user
 
 For any issues or questions, please visit the [Reclaim Protocol Documentation](https://docs.reclaimprotocol.org) or contact support.
 
+For any doubts or bugs regarding this repository code, use [this issue tracker](https://github.com/reclaimprotocol/reclaim-demo-website-v3/issues).
+
 ## License
 
 MIT License
