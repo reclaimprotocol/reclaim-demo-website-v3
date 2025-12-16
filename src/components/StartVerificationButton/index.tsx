@@ -36,12 +36,12 @@ export default function StartVerificationButton({
         : YourBackendUsingReclaim.createVerificationRequest(providerId));
 
       // For this example, we're navigating to a different page with this request to start verification journey
-      // You don't have to do this encoding at all. We did it just for putting this in query params.
-      const encodedRequest = encodeURIComponent(btoa(request));
+      // You don't have to do this base64 or url encoding at all. We did it just for putting this in query params.
+      const encodedRequest = btoa(request);
 
       // Navigating to /verify page with the request
       // You should check that page to understand how to re-create reclaim verification request
-      navigate(`/verify?request=${encodedRequest}`);
+      navigate(`/verify?request=${encodeURIComponent(encodedRequest)}`);
     } catch (error) {
       console.error(error);
       showSnackbar(
