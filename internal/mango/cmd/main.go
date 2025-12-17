@@ -115,7 +115,11 @@ func evaluateXPathFunction(this js.Value, p []js.Value) interface{} {
 	for _, result := range results {
 		resultMap := make(map[string]interface{}, 10)
 
-		resultMap["attributes"] = result.Attributes
+		resultMapAttributes := make(map[string]interface{}, len(result.Attributes))
+		for k, v := range result.Attributes {
+			resultMapAttributes[k] = v
+		}
+		resultMap["attributes"] = resultMapAttributes
 		resultMap["content_end"] = result.ContentEnd
 		resultMap["content_start"] = result.ContentStart
 		resultMap["end_location"] = result.EndLocation
