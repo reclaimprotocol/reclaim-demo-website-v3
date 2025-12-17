@@ -16,9 +16,9 @@ import (
 
 func main() {
 	reclaimStrings := make(map[string]interface{}, 2)
-	js.Global().Set("ReclaimStrings", js.ValueOf(reclaimStrings))
-	js.Global().Get("ReclaimStrings").Set("evaluateJsonPath", js.FuncOf(evaluateJsonPathFunction))
-	js.Global().Get("ReclaimStrings").Set("evaluateXPath", js.FuncOf(evaluateXPathFunction))
+	js.Global().Set("reclaimStrings", js.ValueOf(reclaimStrings))
+	js.Global().Get("reclaimStrings").Set("evaluateJsonPath", js.FuncOf(evaluateJsonPathFunction))
+	js.Global().Get("reclaimStrings").Set("evaluateXPath", js.FuncOf(evaluateXPathFunction))
 	select {}
 }
 
@@ -33,14 +33,14 @@ func evaluateJsonPathFunction(this js.Value, p []js.Value) interface{} {
 	}
 
 	if len(results) == 0 {
-		return js.Global().Get("Error").New("ReclaimStrings.evaluateJsonPath returned no results")
+		return js.Global().Get("Error").New("reclaimStrings.evaluateJsonPath returned no results")
 	}
 
 	doc := []byte(input)
 
 	var root gojson.Node
 	if err := gojson.Unmarshal(doc, &root); err != nil {
-		return js.Global().Get("Error").New(fmt.Sprintf("failed to parse JSON for offsets: %v", err))
+		return js.Global().Get("Error").New(fmt.Sprintf("reclaimStrings.evaluateJsonPath failed to parse JSON for offsets: %v", err))
 	}
 
 	var resultsValue []interface{}
@@ -60,7 +60,7 @@ func evaluateJsonPathFunction(this js.Value, p []js.Value) interface{} {
 
 		n, keyValueRange, err := findNodeBySegments(doc, &root, segments)
 		if err != nil {
-			return js.Global().Get("Error").New(fmt.Sprintf("failed to resolve path %q: %v", result.Path, err))
+			return js.Global().Get("Error").New(fmt.Sprintf("reclaimStrings.evaluateJsonPathfailed to resolve path %q: %v", result.Path, err))
 		}
 
 		// Use key:value range if available (for object properties), otherwise use node range
@@ -77,7 +77,7 @@ func evaluateJsonPathFunction(this js.Value, p []js.Value) interface{} {
 		}
 
 		if start < 0 || end > len(doc) || start > end {
-			return js.Global().Get("Error").New(fmt.Sprintf("invalid range computed for path %q: [%d,%d)", result.Path, start, end))
+			return js.Global().Get("Error").New(fmt.Sprintf("reclaimStrings.evaluateJsonPath invalid range computed for path %q: [%d,%d)", result.Path, start, end))
 		}
 
 		resultMap["start_location"] = start
@@ -85,8 +85,6 @@ func evaluateJsonPathFunction(this js.Value, p []js.Value) interface{} {
 
 		resultsValue = append(resultsValue, resultMap)
 	}
-
-	fmt.Println("JSONPath length: ", len(resultsValue))
 
 	return js.ValueOf(resultsValue)
 }
@@ -107,7 +105,7 @@ func evaluateXPathFunction(this js.Value, p []js.Value) interface{} {
 	}
 
 	if len(results) == 0 {
-		return js.Global().Get("Error").New("ReclaimStrings.evaluateXPath returned no results")
+		return js.Global().Get("Error").New("reclaimStrings.evaluateXPath returned no results")
 	}
 
 	var resultsValue []interface{}

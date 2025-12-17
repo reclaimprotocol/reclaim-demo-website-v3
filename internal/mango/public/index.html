@@ -1,16 +1,18 @@
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <script src="wasm_exec.js"></script>
     <script>
-        const go = new Go();
-        WebAssembly.instantiateStreaming(fetch("mango.wasm"), go.importObject).then((result) => {
-            go.run(result.instance);
-        });
+      const __reclaim_mango = new Go();
+      window.__reclaim_mango = __reclaim_mango;
+      WebAssembly.instantiateStreaming(
+        fetch("mango.wasm"),
+        __reclaim_mango.importObject,
+      ).then((result) => {
+        __reclaim_mango.run(result.instance);
+      });
     </script>
-</head>
+  </head>
 
-<body></body>
-
+  <body></body>
 </html>

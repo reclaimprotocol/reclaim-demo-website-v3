@@ -25,15 +25,15 @@ export default function StartVerificationButton({
       // To start verifications in frontend, you should create verification requests at backend and
       // send the reclaim json string to frontend
       const request = await (settings?.isExpertModeEnabled
-        // This uses advanced options to create a request.
-        // You don't need this if you're new to Reclaim and just trying it out.
-        ? YourBackendUsingReclaim.createVerificationRequestAsExpert(
-          providerId,
-          settings,
-        )
-        // This is the simple way to create a request.
-        // If you are a beginner with Reclaim, we recommend using this.
-        : YourBackendUsingReclaim.createVerificationRequest(providerId));
+        ? // This uses advanced options to create a request.
+          // You don't need this if you're new to Reclaim and just trying it out.
+          YourBackendUsingReclaim.createVerificationRequestAsExpert(
+            providerId,
+            settings,
+          )
+        : // This is the simple way to create a request.
+          // If you are a beginner with Reclaim, we recommend using this.
+          YourBackendUsingReclaim.createVerificationRequest(providerId));
 
       // For this example, we're navigating to a different page with this request to start verification journey
       // You don't have to do this base64 or url encoding at all. We did it just for putting this in query params.

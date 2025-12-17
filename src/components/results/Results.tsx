@@ -5,6 +5,7 @@ import {
   formatParamsValue,
   isValueCollection,
 } from "../../utils/format_params";
+import { Dialog } from "../Dialog";
 
 type ProofRecord = { key: string; value: string };
 
@@ -89,7 +90,6 @@ export default function ResultsView({
 
 const ProofDetailsDialog = ({ proof }: { proof: Proof[] }) => {
   const [isOpen, setShowDetails] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const onClose = () => setShowDetails(false);
 
@@ -121,96 +121,22 @@ const ProofDetailsDialog = ({ proof }: { proof: Proof[] }) => {
       </div>
     );
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(JSON.stringify(proof, null, 2));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const proofText = JSON.stringify(proof, null, 2);
 
   return (
-    <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-        <div
-          className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity"
-          onClick={onClose}
-        />
-        <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex items-center justify-between p-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Generated Proofs
-            </h2>
-            <button
-              onClick={onClose}
-              className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div className="p-0 overflow-hidden flex flex-col">
-            <div className="flex items-center justify-end px-4 py-2 bg-gray-50 border-b border-gray-100">
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-colors font-medium text-xs uppercase tracking-wide px-3 py-1.5 rounded-lg hover:bg-gray-200/50"
-              >
-                {copied ? (
-                  <>
-                    <svg
-                      className="w-4 h-4 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span className="text-green-600">Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span>Copy JSON</span>
-                  </>
-                )}
-              </button>
-            </div>
-            <div className="overflow-auto p-4 bg-gray-50/50">
-              <pre className="text-xs sm:text-sm font-mono text-gray-800 whitespace-pre-wrap break-all leading-relaxed text-left">
-                {JSON.stringify(proof, null, 2)}
-              </pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Generated Proofs"
+      copy={{
+        label: "Proof",
+        getDataForCopy: () => proofText,
+      }}
+    >
+      <pre className="text-xs sm:text-sm font-mono text-gray-800 whitespace-pre-wrap break-all leading-relaxed text-left">
+        {proofText}
+      </pre>
+    </Dialog>
   );
 };
 

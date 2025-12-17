@@ -17,10 +17,10 @@ export const Navbar = () => {
         Expert
       </NavLink>
       <NavLink
-        to="/attestor"
+        to="/playground"
         className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
       >
-        Attestor Playground
+        Claim Playground
       </NavLink>
     </nav>
   );

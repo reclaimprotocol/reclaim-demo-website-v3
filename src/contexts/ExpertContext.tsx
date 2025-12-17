@@ -84,7 +84,9 @@ export const ExpertContextProvider = ({
   };
 
   return (
-    <ExpertContext.Provider value={{ settings, updateSettings, saveSettings, resetSettings }}>
+    <ExpertContext.Provider
+      value={{ settings, updateSettings, saveSettings, resetSettings }}
+    >
       {children}
     </ExpertContext.Provider>
   );

@@ -4,7 +4,8 @@ import { showSnackbar } from "../../components/Snackbar";
 import { useNavigate } from "react-router";
 
 function Page() {
-  const { settings, updateSettings, saveSettings, resetSettings } = useExpertContext();
+  const { settings, updateSettings, saveSettings, resetSettings } =
+    useExpertContext();
 
   const navigate = useNavigate();
 
