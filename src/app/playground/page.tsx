@@ -3,11 +3,21 @@ import { EvaluatorSection } from "./components/EvaluatorSection";
 import { ClaimRequestSection } from "./components/ClaimRequestSection";
 import { useEffect } from "react";
 import { installReclaimStrings } from "../../utils/reclaim_strings";
+import { showSnackbar } from "../../components/Snackbar";
 
+// Playground page for testing claim evaluation
 function Page() {
   useEffect(() => {
     // deferred loading of window.ReclaimStrings
     installReclaimStrings();
+
+    const checkReady = setTimeout(() => {
+      if (!("reclaimStrings" in window)) {
+        showSnackbar("Could not install reclaimStrings");
+      }
+    }, 1000);
+
+    return () => clearTimeout(checkReady);
   }, []);
 
   return (

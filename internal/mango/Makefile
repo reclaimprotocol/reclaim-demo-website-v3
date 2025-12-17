@@ -1,4 +1,4 @@
-.PHONY: build
+.PHONY: build serve fmt
 
 build:
 	mkdir -p build;

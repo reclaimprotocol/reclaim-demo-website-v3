@@ -74,6 +74,7 @@ function Page() {
           <input
             type="checkbox"
             checked={settings.autoTriggerFlow}
+            disabled={!settings.isExpertModeEnabled}
             onChange={(e) =>
               updateSettings({ autoTriggerFlow: e.target.checked })
             }
@@ -94,26 +95,13 @@ function Page() {
           <input
             type="checkbox"
             checked={settings.useDeferredDeepLinksFlow}
+            disabled={!settings.isExpertModeEnabled}
             onChange={(e) =>
               updateSettings({ useDeferredDeepLinksFlow: e.target.checked })
             }
           />
           <span className="slider"></span>
         </label>
-      </div>
-
-      <div
-        className={`settings-card ${!settings.isExpertModeEnabled ? "disabled" : ""}`}
-      >
-        <div className="setting-title">Callback URL</div>
-        <div className="setting-desc">URL to receive proof callbacks.</div>
-        <input
-          type="text"
-          className="input-tile"
-          placeholder="https://example.com/callback"
-          value={settings.callbackUrl}
-          onChange={(e) => updateSettings({ callbackUrl: e.target.value })}
-        />
       </div>
 
       <div
@@ -128,6 +116,37 @@ function Page() {
           placeholder='{"key": "value"}'
           value={settings.parameters}
           onChange={(e) => updateSettings({ parameters: e.target.value })}
+        />
+      </div>
+
+      <div
+        className={`settings-card ${!settings.isExpertModeEnabled ? "disabled" : ""}`}
+      >
+        <div className="setting-title">Provider Version</div>
+        <div className="setting-desc">
+          Specific provider version to use. Leaving this blank will use the
+          latest version.
+        </div>
+        <input
+          type="text"
+          className="input-tile"
+          placeholder="v1.0.0"
+          value={settings.providerVersion}
+          onChange={(e) => updateSettings({ providerVersion: e.target.value })}
+        />
+      </div>
+
+      <div
+        className={`settings-card ${!settings.isExpertModeEnabled ? "disabled" : ""}`}
+      >
+        <div className="setting-title">Callback URL</div>
+        <div className="setting-desc">URL to receive proof callbacks.</div>
+        <input
+          type="text"
+          className="input-tile"
+          placeholder="https://example.com/callback"
+          value={settings.callbackUrl}
+          onChange={(e) => updateSettings({ callbackUrl: e.target.value })}
         />
       </div>
 
@@ -171,23 +190,6 @@ function Page() {
           placeholder="Enter Share Page URL"
           value={settings.sharePageUrl}
           onChange={(e) => updateSettings({ sharePageUrl: e.target.value })}
-        />
-      </div>
-
-      <div
-        className={`settings-card ${!settings.isExpertModeEnabled ? "disabled" : ""}`}
-      >
-        <div className="setting-title">Provider Version</div>
-        <div className="setting-desc">
-          Specific provider version to use. Leaving this blank will use the
-          latest version.
-        </div>
-        <input
-          type="text"
-          className="input-tile"
-          placeholder="v1.0.0"
-          value={settings.providerVersion}
-          onChange={(e) => updateSettings({ providerVersion: e.target.value })}
         />
       </div>
 

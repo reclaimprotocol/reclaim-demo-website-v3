@@ -11,9 +11,16 @@ export const installReclaimStrings = () => {
     WebAssembly.instantiateStreaming(
       fetch("mango/mango.wasm"),
       __reclaim_mango.importObject,
-    ).then((result) => {
-      __reclaim_mango.run(result.instance);
-    });
+    )
+      .then((result) => {
+        __reclaim_mango.run(result.instance);
+      })
+      .catch((err) => {
+        console.error("Failed to load or run mango.wasm:", err);
+      });
+  };
+  script.onerror = () => {
+    console.error("Failed to load wasm_exec.js");
   };
   document.head.appendChild(script);
 };

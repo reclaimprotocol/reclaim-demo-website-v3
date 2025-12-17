@@ -90,7 +90,7 @@ export function EvaluatorSection({ title, evaluate }: EvaluatorSectionProps) {
               </button>
             </div>
             <div className="bg-gray-800 p-3 rounded-md max-h-[200px] overflow-y-auto">
-              <p className="font-mono whitespace-pre-wrap break-all text-gray-800 text-gray-200">
+              <p className="font-mono whitespace-pre-wrap break-all text-gray-200">
                 {result}
               </p>
             </div>

@@ -23,6 +23,10 @@ func main() {
 }
 
 func evaluateJsonPathFunction(this js.Value, p []js.Value) interface{} {
+	if len(p) < 2 {
+		return js.Global().Get("Error").New("reclaimStrings.evaluateJsonPath requires 2 arguments: expression, input")
+	}
+
 	expression := p[0].String()
 	input := p[1].String()
 
@@ -90,6 +94,10 @@ func evaluateJsonPathFunction(this js.Value, p []js.Value) interface{} {
 }
 
 func evaluateXPathFunction(this js.Value, p []js.Value) interface{} {
+	if len(p) < 3 {
+		return js.Global().Get("Error").New("reclaimStrings.evaluateXPath requires 3 arguments: expression, input, and contentsOnly")
+	}
+
 	expression := p[0].String()
 	input := p[1].String()
 	contentsOnly := p[2].Bool()
