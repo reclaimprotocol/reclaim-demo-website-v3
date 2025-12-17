@@ -109,7 +109,7 @@ export function EvaluatorSection({ title, evaluate }: EvaluatorSectionProps) {
         onClose={() => setShowDialog(false)}
         title="Evaluation Result"
         copy={{
-          label: "Copy Result",
+          label: "Result",
           getDataForCopy: () => result,
         }}
       >
