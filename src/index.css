@@ -1,0 +1,332 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  --font-family: "Outfit", sans-serif;
+  --primary-color: #0000ff;
+  /* Bright Blue */
+  --text-color: #020202;
+  --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f5f3ff 100%);
+}
+
+/* 1. Define the animation keyframes */
+@keyframes shimmer-move {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* 2. Shared Shimmer Properties */
+.shimmer-white,
+.shimmer-black,
+.shimmer-blue {
+  /* This clips the background to the text shape */
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* Make the text color transparent so the background shows through */
+  color: transparent;
+
+  /* Ensure the background is large enough to move */
+  background-size: 200% auto;
+
+  /* Animate the background */
+  animation: shimmer-move 3s linear infinite;
+}
+
+/* 3. White Shimmer (Best on Dark Backgrounds) */
+.shimmer-white {
+  /* Gradient: Dim White -> Bright White -> Dim White */
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.4) 0%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+}
+
+/* 4. Black Shimmer (Best on Light Backgrounds) */
+.shimmer-black {
+  /* Gradient: Black -> Dark Grey/Silver -> Black */
+  background-image: linear-gradient(
+    to right,
+    #000000 0%,
+    #666666 50%,
+    #000000 100%
+  );
+}
+
+.shimmer-blue {
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 255, 0.4) 0%,
+    #0000ee 50%,
+    rgba(0, 0, 255, 0.4) 100%
+  );
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-gradient);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.root-bg {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 2rem 1rem;
+  max-width: 100%;
+  min-height: 100vh;
+}
+
+.sub-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 6rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  padding-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo-icon {
+  height: 32px;
+  width: auto;
+}
+
+.logo-text {
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.main-heading {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.03em;
+  color: #0000ee;
+  /* Matching the deep blue in the screenshot */
+}
+
+.subheading {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-top: 0.1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.status-text {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-top: auto;
+  margin-bottom: 0;
+  padding-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.link {
+  color: #0000ee;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.divider {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 1.5rem 0;
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  /* Pill shape */
+  border: 1px solid rgba(0, 0, 238, 0.2);
+  background: white;
+  font-family: var(--font-family);
+  font-size: 1.1rem;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.input-field:focus {
+  border-color: #0000ee;
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 238, 0.1),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  width: auto;
+  min-width: 230px;
+  max-width: 100%;
+  background-color: #0000ee;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0000cc;
+}
+
+.btn-primary:disabled {
+  background-color: #000088;
+}
+
+.btn-secondary {
+  width: auto;
+  min-width: 230px;
+  max-width: 100%;
+  color: black;
+  border: 1px solid grey;
+  border-radius: 12px;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #0000cc11;
+}
+
+.btn-secondary:disabled {
+  background-color: #000088;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.navbar {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  z-index: 50;
+}
+
+.nav-link {
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.nav-link:hover {
+  color: #0000ee;
+}
+
+.nav-link.active {
+  color: #0000ee;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #0000ee;
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    justify-content: center;
+    top: 1rem;
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+}
+
+.nav-link {
+  font-size: 0.9rem;
+}
