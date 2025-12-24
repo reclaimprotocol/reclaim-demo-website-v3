@@ -189,8 +189,6 @@ function Page() {
     <div className="container">
       <WordLogo />
 
-      <h1 className="main-heading">Reclaim Protocol Demo</h1>
-
       {/* Ignore this section, just for demo decoration */}
       {/* ==== IGNORE START ==== */}
       <ProviderAppInfoTile

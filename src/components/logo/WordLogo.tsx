@@ -7,14 +7,14 @@ export default function WordLogo() {
   return (
     <div
       className="logo-container"
-      style={{ marginTop: !isMobile ? "15vh" : "4vh" }}
+      style={{ marginTop: isMobile ? "6vh" : "20vh" }}
     >
       <a href="https://reclaimprotocol.org" target="_blank" rel="noreferrer">
         <img
           src={wordLogo}
           alt="Reclaim Protocol"
           className="logo-icon"
-          style={{ height: "40px", width: "auto" }}
+          style={{ height: isMobile ? "40px" : "80px", width: "auto" }}
         />
       </a>
     </div>

@@ -26,6 +26,8 @@ const defaultSettings: ExpertSettings = {
   appSecret: "",
   sharePageUrl: "",
   useDeferredDeepLinksFlow: true,
+  canAutoSubmit: true,
+  metadata: "",
 };
 
 const ExpertContext = createContext<ExpertContextType | undefined>(undefined);
