@@ -31,6 +31,7 @@ export function EvaluatorSection({ title, evaluate }: EvaluatorSectionProps) {
         if (!path) {
           showSnackbar("Path is required");
         }
+        setLoading(false);
         return;
       }
       const res = await evaluate(path, input);
