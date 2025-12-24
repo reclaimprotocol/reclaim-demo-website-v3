@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { YourBackendUsingReclaim } from "../../service/reclaim";
 import { ReclaimProofRequest, type Proof } from "@reclaimprotocol/js-sdk";
 import { showSnackbar } from "../../components/Snackbar";
@@ -73,94 +73,98 @@ function Page() {
 
   // Simply calling this function will cause reclaim to trigger
   // the appropriate Reclaim verification flow based on device type and configuration
-  const launchReclaimFlow = async (
-    proofRequest: ReclaimProofRequest,
-  ): Promise<void> => {
-    proofRequest.triggerReclaimFlow().catch((error) => {
-      console.error("Failed to trigger reclaim flow", error);
-      setStatus("error");
-    });
-  };
+  const launchReclaimFlow = useCallback(
+    async (proofRequest: ReclaimProofRequest): Promise<void> => {
+      proofRequest.triggerReclaimFlow().catch((error) => {
+        console.error("Failed to trigger reclaim flow", error);
+        setStatus("error");
+      });
+    },
+    [],
+  );
 
-  const startVerificationJourney = async (
-    proofRequest: ReclaimProofRequest,
-  ): Promise<void> => {
-    if (autoTriggerFlow) {
-      launchReclaimFlow(proofRequest);
-    }
+  const startVerificationJourney = useCallback(
+    async (proofRequest: ReclaimProofRequest): Promise<void> => {
+      if (autoTriggerFlow) {
+        launchReclaimFlow(proofRequest);
+      }
 
-    // If you are not using a custom callback, then you can use this function on your frontend
-    // to receive proofs (or fatal error) when verification is completed
-    //
-    // Incase of custom callbacks, you'll get your proof sent as HTTP POST request to the callback URL.
-    proofRequest
-      .startSession({
-        // When proof is provided by this SDK callback here, it is already verified.
-        // As best practise, you MUST verify it again using `verifyProof` from `import { verifyProof } from "@reclaimprotocol/js-sdk"`
-        onSuccess: async (proof) => {
-          console.info({ proof });
+      // If you are not using a custom callback, then you can use this function on your frontend
+      // to receive proofs (or fatal error) when verification is completed
+      //
+      // Incase of custom callbacks, you'll get your proof sent as HTTP POST request to the callback URL.
+      proofRequest
+        .startSession({
+          // When proof is provided by this SDK callback here, it is already verified.
+          // As best practise, you MUST verify it again using `verifyProof` from `import { verifyProof } from "@reclaimprotocol/js-sdk"`
+          onSuccess: async (proof) => {
+            console.info({ proof });
 
-          if (!proof) {
-            // likely a type issue, shouldn't happen
-            showSnackbar(`Verification returned unexpected result`);
-            return;
-          }
+            if (!proof) {
+              // likely a type issue, shouldn't happen
+              showSnackbar(`Verification returned unexpected result`);
+              return;
+            }
 
-          // As best practise, you MUST validate the fields in the proof to make sure that
-          // this is the proof you expected.
-          //
-          // As an example, validation can be done by checking request url, headers,
-          // method, proven fields (aka extracted params), etc.
-          showSnackbar(`Verifying result`);
+            // As best practise, you MUST validate the fields in the proof to make sure that
+            // this is the proof you expected.
+            //
+            // As an example, validation can be done by checking request url, headers,
+            // method, proven fields (aka extracted params), etc.
+            showSnackbar(`Verifying result`);
 
-          try {
-            const trustableProof =
-              await YourBackendUsingReclaim.processProof(proof);
-            showSnackbar(`Verification completed successfully`);
-            setProof(trustableProof);
+            try {
+              const trustableProof =
+                await YourBackendUsingReclaim.processProof(proof);
+              showSnackbar(`Verification completed successfully`);
+              setProof(trustableProof);
 
-            setStatus("completed");
-            setStatusLiveBackground("success");
-          } catch (error) {
+              setStatus("completed");
+              setStatusLiveBackground("success");
+            } catch (error) {
+              console.error(error);
+              showSnackbar(
+                `Something went wrong because ${getErrorMessage(error)}`,
+              );
+
+              setStatus("error");
+              setStatusLiveBackground("error");
+            }
+          },
+          onError: (error) => {
+            // Well, I know this is an error and we should show this in UI and stop verification..
+            // But users can retry verification. We can assume this
+            // verification has 'failed' if you don't receive a proof after ~10 mins
+            // of starting verification.
             console.error(error);
             showSnackbar(
               `Something went wrong because ${getErrorMessage(error)}`,
             );
-
-            setStatus("error");
-            setStatusLiveBackground("error");
-          }
-        },
-        onError: (error) => {
-          // Well, I know this is an error and we should show this in UI and stop verification..
-          // But users can retry verification. We can assume this
-          // verification has 'failed' if you don't receive a proof after ~10 mins
-          // of starting verification.
-          console.error(error);
+          },
+        })
+        .catch((error) => {
+          console.error("Failed to get session information", error);
+          setStatus("error");
           showSnackbar(
             `Something went wrong because ${getErrorMessage(error)}`,
           );
-        },
-      })
-      .catch((error) => {
-        console.error("Failed to get session information", error);
-        setStatus("error");
-        showSnackbar(`Something went wrong because ${getErrorMessage(error)}`);
-      });
+        });
 
-    // You can do this when you don't want to use proofRequest.triggerReclaimFlow(),
-    // and want to launch verification in other *custom* ways, like letting your user scan a QR code
-    // or launching this link in a browser.
-    proofRequest
-      .getRequestUrl()
-      .then(setVerificationLink)
-      .catch((error) => {
-        console.error("Failed to get verification link", error);
-        setStatus("error");
-      });
+      // You can do this when you don't want to use proofRequest.triggerReclaimFlow(),
+      // and want to launch verification in other *custom* ways, like letting your user scan a QR code
+      // or launching this link in a browser.
+      proofRequest
+        .getRequestUrl()
+        .then(setVerificationLink)
+        .catch((error) => {
+          console.error("Failed to get verification link", error);
+          setStatus("error");
+        });
 
-    setStatus("verifying");
-  };
+      setStatus("verifying");
+    },
+    [autoTriggerFlow, launchReclaimFlow, setStatusLiveBackground],
+  );
 
   useEffect(() => {
     if (!proofRequest) return;
