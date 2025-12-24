@@ -17,17 +17,6 @@ function Page() {
   const [status, setStatus] = useState<VerificationStatus>("starting");
   const { setStatus: setStatusLiveBackground } = useLiveBackground();
 
-  // Ignore this section of the code, it's just for demo purposes.
-  // ==== IGNORE START ====
-  const autoTriggerFlow = useSelectFromExpertSettings(
-    (settings) => settings.autoTriggerFlow,
-  );
-
-  useEffect(() => {
-    setStatusLiveBackground(proof ? "success" : "loading");
-  }, [setStatusLiveBackground]);
-  // ==== IGNORE END ====
-
   const [search] = useSearchParams();
   // Retreiving the base 64 encoded string
   const encodedRequest = search.get("request");
@@ -40,6 +29,17 @@ function Page() {
   const [proof, setProof] = useState<Proof[] | null>(null);
   const [applicationId, setApplicationId] = useState<string>("");
   const [providerId, setProviderId] = useState<string>("");
+
+  // Ignore this section of the code, it's just for demo purposes.
+  // ==== IGNORE START ====
+  const autoTriggerFlow = useSelectFromExpertSettings(
+    (settings) => settings.autoTriggerFlow,
+  );
+
+  useEffect(() => {
+    setStatusLiveBackground(proof ? "success" : "loading");
+  }, [proof, setStatusLiveBackground]);
+  // ==== IGNORE END ====
 
   /**
    * You can use this on your frontend to create ReclaimProofRequest with a JSON string of proof request received
@@ -183,7 +183,7 @@ function Page() {
       setProviderId((proofRequest as any).providerId);
     }
     // ==== IGNORE END ====
-  }, [proofRequest]);
+  }, [proofRequest, startVerificationJourney]);
 
   return (
     <div className="container">

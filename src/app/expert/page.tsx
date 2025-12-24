@@ -13,21 +13,21 @@ function Page() {
     // Validate JSON fields
     try {
       if (settings.parameters) JSON.parse(settings.parameters);
-    } catch (e) {
+    } catch (_) {
       showSnackbar("Invalid JSON in Parameters field.");
       return;
     }
 
     try {
       if (settings.context) JSON.parse(settings.context);
-    } catch (e) {
+    } catch (_) {
       showSnackbar("Invalid JSON in Context field.");
       return;
     }
 
     try {
       if (settings.metadata) JSON.parse(settings.metadata);
-    } catch (e) {
+    } catch (_) {
       showSnackbar("Invalid JSON in Metadata field.");
       return;
     }
