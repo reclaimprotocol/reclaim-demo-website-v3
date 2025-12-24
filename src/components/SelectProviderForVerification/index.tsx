@@ -9,29 +9,50 @@ interface Provider {
   logoUrl: string;
 }
 
+const getProvidersByQuery = async (query: string, abortSignal: AbortSignal) => {
+  let isVerifiedQuery = "";
+  if (!query.trim()) {
+    isVerifiedQuery = "&isVerified=true";
+  }
+  const res = await fetch(
+    `https://api.reclaimprotocol.org/api/providers/active/paginated?pageKey=0&pageSize=20&searchQuery=${encodeURIComponent(query.trim())}${isVerifiedQuery}`,
+    {
+      signal: abortSignal,
+    },
+  );
+  const data = await res.json();
+  if (data.providers) {
+    return data.providers as Provider[];
+  }
+  return null;
+};
+
 export default function SelectProviderForVerification() {
   const [query, setQuery] = useState("");
   const [providers, setProviders] = useState<Provider[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
+    null,
+  );
 
   useEffect(() => {
     const abortController = new AbortController();
 
     const fetchProviders = async () => {
-      let isVerifiedQuery = "";
-      if (!query.trim()) {
-        isVerifiedQuery = "&isVerified=true";
-      }
       try {
-        const res = await fetch(
-          `https://api.reclaimprotocol.org/api/providers/active/paginated?pageKey=0&pageSize=20&searchQuery=${encodeURIComponent(query.trim())}${isVerifiedQuery}`,
-          {
-            signal: abortController.signal,
-          },
+        const providers = await getProvidersByQuery(
+          query,
+          abortController.signal,
         );
-        const data = await res.json();
-        if (data.providers) {
-          setProviders(data.providers);
+        if (providers) {
+          setProviders(providers);
+          // If we have a query (ID) but no selected provider, check if it matches one of the results
+          if (query && !selectedProvider) {
+            const match = providers.find((p) => p.httpProviderId === query);
+            if (match) {
+              setSelectedProvider(match);
+            }
+          }
         }
       } catch (error) {
         if (abortController.signal.aborted) return;
@@ -46,11 +67,18 @@ export default function SelectProviderForVerification() {
       clearTimeout(timeoutId);
       abortController.abort();
     };
-  }, [query]);
+  }, [query]); // existing dependency
 
-  const handleSelect = (id: string) => {
-    setQuery(id);
+  const handleSelect = (provider: Provider) => {
+    setQuery(provider.httpProviderId);
+    setSelectedProvider(provider);
     setIsOpen(false);
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setSelectedProvider(null);
+    setIsOpen(true);
   };
 
   const actionBar = (
@@ -63,16 +91,59 @@ export default function SelectProviderForVerification() {
     <div className="provider-selector-wrapper">
       <div className={`search-container ${isOpen ? "open" : ""}`}>
         <div className="input-wrapper">
-          <input
-            type="text"
-            placeholder="Search for a data provider"
-            className="input-field"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => setIsOpen(true)}
-            // Delay closing to allow clicking on items
-            onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          />
+          {selectedProvider && !isOpen ? (
+            <div
+              className="selected-provider-card"
+              onClick={() => setIsOpen(true)}
+            >
+              <div className="selected-provider-info">
+                <img
+                  src={selectedProvider.logoUrl}
+                  alt={selectedProvider.name}
+                  className="selected-provider-icon"
+                />
+                <span className="selected-provider-name">
+                  {selectedProvider.name}
+                </span>
+              </div>
+              <button
+                className="clear-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClear();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <input
+              type="text"
+              placeholder="Search for a data provider"
+              className="input-field"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                if (selectedProvider) setSelectedProvider(null);
+              }}
+              onFocus={() => setIsOpen(true)}
+              // Delay closing to allow clicking on items
+              onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+            />
+          )}
         </div>
 
         {isOpen && (
@@ -83,7 +154,7 @@ export default function SelectProviderForVerification() {
                   <div
                     key={provider.httpProviderId}
                     className="result-item"
-                    onClick={() => handleSelect(provider.httpProviderId)}
+                    onClick={() => handleSelect(provider)}
                   >
                     <img
                       src={provider.logoUrl}
@@ -98,6 +169,23 @@ export default function SelectProviderForVerification() {
                 ))}
               </div>
             )}
+
+            {query.trim() ? (
+              <div className="mt-1">
+                <p>
+                  Can't find what you're looking for? You can build your own
+                  provider.{" "}
+                  <a
+                    href="https://dev.reclaimprotocol.org"
+                    className="link"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Learn More
+                  </a>
+                </p>
+              </div>
+            ) : undefined}
 
             <div className="action-bar-in-overlay">{actionBar}</div>
           </div>

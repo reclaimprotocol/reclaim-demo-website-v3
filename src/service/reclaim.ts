@@ -121,6 +121,10 @@ export const YourBackendUsingReclaim = {
               ? expertSettings.useDeferredDeepLinksFlow
               : undefined,
         },
+        canAutoSubmit: expertSettings.canAutoSubmit ?? true,
+        metadata: expertSettings.metadata
+          ? JSON.parse(expertSettings.metadata)
+          : undefined,
       },
     );
 

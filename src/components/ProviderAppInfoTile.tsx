@@ -55,8 +55,95 @@ export const ProviderAppInfoTile = ({
     );
   }
 
-  // Loading placeholder component
-  const LoadingPlaceholder = () => (
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "4px",
+        gap: gapSize,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "8px",
+        }}
+      >
+        {isLoadingProvider || !providerInfo?.logoUrl ? (
+          <LoadingPlaceholder iconSize={iconSize} />
+        ) : (
+          <img
+            src={providerInfo.logoUrl}
+            alt={providerInfo.name || "Provider"}
+            style={{
+              width: iconSize,
+              height: iconSize,
+              objectFit: "cover",
+              borderRadius: "12px",
+            }}
+            onError={(e) => {
+              console.error(
+                "Failed to load provider logo:",
+                providerInfo.logoUrl,
+              );
+              // Optionally set a fallback image
+              const target = e.currentTarget as HTMLImageElement;
+              target.style.display = "none";
+            }}
+          />
+        )}
+      </div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#454242ff"
+      >
+        <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
+      </svg>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "8px",
+        }}
+      >
+        {isLoadingApplication || !applicationInfo?.appImageUrl ? (
+          <LoadingPlaceholder iconSize={iconSize} />
+        ) : (
+          <img
+            src={applicationInfo.appImageUrl}
+            alt={applicationInfo.name || "Application"}
+            style={{
+              width: iconSize,
+              height: iconSize,
+              objectFit: "cover",
+              borderRadius: "12px",
+            }}
+            onError={(e) => {
+              console.error(
+                "Failed to load application image:",
+                applicationInfo.appImageUrl,
+              );
+              // Optionally set a fallback image
+              const target = e.currentTarget as HTMLImageElement;
+              target.style.display = "none";
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+function LoadingPlaceholder({ iconSize }: { iconSize: string }) {
+  return (
     <div
       style={{
         width: iconSize,
@@ -103,90 +190,4 @@ export const ProviderAppInfoTile = ({
       </svg>
     </div>
   );
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "4px",
-        gap: gapSize,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "8px",
-        }}
-      >
-        {isLoadingProvider || !providerInfo?.logoUrl ? (
-          <LoadingPlaceholder />
-        ) : (
-          <img
-            src={providerInfo.logoUrl}
-            alt={providerInfo.name || "Provider"}
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: "cover",
-              borderRadius: "12px",
-            }}
-            onError={(e) => {
-              console.error(
-                "Failed to load provider logo:",
-                providerInfo.logoUrl,
-              );
-              // Optionally set a fallback image
-              const target = e.currentTarget as HTMLImageElement;
-              target.style.display = "none";
-            }}
-          />
-        )}
-      </div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 -960 960 960"
-        width="24px"
-        fill="#454242ff"
-      >
-        <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
-      </svg>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "8px",
-        }}
-      >
-        {isLoadingApplication || !applicationInfo?.appImageUrl ? (
-          <LoadingPlaceholder />
-        ) : (
-          <img
-            src={applicationInfo.appImageUrl}
-            alt={applicationInfo.name || "Application"}
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: "cover",
-              borderRadius: "12px",
-            }}
-            onError={(e) => {
-              console.error(
-                "Failed to load application image:",
-                applicationInfo.appImageUrl,
-              );
-              // Optionally set a fallback image
-              const target = e.currentTarget as HTMLImageElement;
-              target.style.display = "none";
-            }}
-          />
-        )}
-      </div>
-    </div>
-  );
-};
+}

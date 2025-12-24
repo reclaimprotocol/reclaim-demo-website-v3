@@ -278,7 +278,9 @@ body {
   position: absolute;
   top: 1.5rem;
   left: 2rem;
+  right: 2rem;
   display: flex;
+  justify-content: space-between;
   gap: 1.5rem;
   z-index: 50;
 }

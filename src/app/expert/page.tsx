@@ -13,15 +13,22 @@ function Page() {
     // Validate JSON fields
     try {
       if (settings.parameters) JSON.parse(settings.parameters);
-    } catch (e) {
+    } catch (_) {
       showSnackbar("Invalid JSON in Parameters field.");
       return;
     }
 
     try {
       if (settings.context) JSON.parse(settings.context);
-    } catch (e) {
+    } catch (_) {
       showSnackbar("Invalid JSON in Context field.");
+      return;
+    }
+
+    try {
+      if (settings.metadata) JSON.parse(settings.metadata);
+    } catch (_) {
+      showSnackbar("Invalid JSON in Metadata field.");
       return;
     }
 
@@ -77,6 +84,28 @@ function Page() {
             disabled={!settings.isExpertModeEnabled}
             onChange={(e) =>
               updateSettings({ autoTriggerFlow: e.target.checked })
+            }
+          />
+          <span className="slider"></span>
+        </label>
+      </div>
+
+      <div
+        className={`settings-card ${!settings.isExpertModeEnabled ? "disabled" : ""}`}
+      >
+        <div className="setting-title">Can Auto Submit</div>
+        <div className="setting-desc">
+          Whether the verification client should automatically submit necessary
+          proofs once they are generated. If set to false, the user must
+          manually click a button to submit.
+        </div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={settings.canAutoSubmit}
+            disabled={!settings.isExpertModeEnabled}
+            onChange={(e) =>
+              updateSettings({ canAutoSubmit: e.target.checked })
             }
           />
           <span className="slider"></span>
@@ -190,6 +219,22 @@ function Page() {
           placeholder="Enter Share Page URL"
           value={settings.sharePageUrl}
           onChange={(e) => updateSettings({ sharePageUrl: e.target.value })}
+        />
+      </div>
+
+      <div
+        className={`settings-card ${!settings.isExpertModeEnabled ? "disabled" : ""}`}
+      >
+        <div className="setting-title">Metadata</div>
+        <div className="setting-desc">
+          Additional metadata to pass to the verification client. JSON string of
+          metadata.
+        </div>
+        <textarea
+          className="input-tile"
+          placeholder='{"key": "value"}'
+          value={settings.metadata}
+          onChange={(e) => updateSettings({ metadata: e.target.value })}
         />
       </div>
 

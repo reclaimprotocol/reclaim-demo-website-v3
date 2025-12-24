@@ -1,7 +1,8 @@
 {
   "name": "try.reclaimprotocol.org",
+  "description": "A playground to explore use of @reclaimprotocol/js-sdk",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +12,7 @@
     "format": "npx prettier . --write"
   },
   "dependencies": {
-    "@reclaimprotocol/js-sdk": "^4.6.5",
+    "@reclaimprotocol/js-sdk": "^4.7.0",
     "@tailwindcss/vite": "^4.1.18",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -36,5 +37,25 @@
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.2.5"
-  }
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "zktls",
+    "verification",
+    "react",
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reclaimprotocol/reclaim-demo-website-v3.git"
+  },
+  "author": "Reclaim Protocol  (https://reclaimprotocol.org)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reclaimprotocol/reclaim-demo-website-v3/issues"
+  },
+  "homepage": "https://github.com/reclaimprotocol/reclaim-demo-website-v3#readme"
 }

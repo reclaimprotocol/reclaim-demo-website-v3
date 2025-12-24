@@ -10,4 +10,12 @@ export interface ExpertSettings {
   appSecret: string;
   sharePageUrl: string;
   useDeferredDeepLinksFlow: boolean;
+  /**
+   * @since 4.7.0
+   */
+  canAutoSubmit?: boolean;
+  /**
+   * @since 4.7.0
+   */
+  metadata?: string; // JSON string
 }

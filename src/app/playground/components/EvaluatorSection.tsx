@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getErrorMessage } from "../../../utils/error_message";
 import { Dialog } from "../../../components/Dialog";
+import { showSnackbar } from "../../../components/Snackbar";
 
 interface EvaluatorSectionProps {
   title: string;
@@ -23,6 +24,16 @@ export function EvaluatorSection({ title, evaluate }: EvaluatorSectionProps) {
     setResult("");
     try {
       const input = data;
+      if (!input || !path) {
+        if (!input) {
+          showSnackbar("Data is required");
+        }
+        if (!path) {
+          showSnackbar("Path is required");
+        }
+        setLoading(false);
+        return;
+      }
       const res = await evaluate(path, input);
       let firstResult = null;
       for (const record of res) {
